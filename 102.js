@@ -1,4 +1,4 @@
-var xx = parseInt(prompt("輸入大小規格:"));
+var xx = parseInt(prompt("輸入大小規格:\n5-30\n建議輸入20。"));
 
 
 // 地圖建立過程
@@ -22,7 +22,13 @@ var table_all = document.getElementById("table_all");
 table_all.innerHTML = td_all;
 
 // 初始蛇
-var snake = [1, 2, 3];
+var snake_xx = Math.floor(xx/5)+1
+console.log(snake_xx)
+var snake = [1];
+for (let g = 1; g < snake_xx; g++) {
+    snake.push(snake[snake.length - 1]+1);
+}
+
 function snake_init() {
     for (let s = 0; s < snake.length; s++) {
         document.getElementById(`td_${snake[s]}`).style.backgroundColor = "red"
@@ -35,7 +41,10 @@ function snake_del() {
     for (let s = 0; s < snake.length; s++) {
         document.getElementById(`td_${snake[s]}`).style.backgroundColor = "";
     }
-    snake = [1, 2, 3];
+    snake = [1];
+    for (let g = 1; g < snake_xx; g++) {
+        snake.push(snake[snake.length - 1]+1);
+    }
 }
 // 重製蛇
 function snake_return() {
@@ -206,27 +215,35 @@ function snake_eat() {
     if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == 1) {
         snake.unshift(snake[0] - 1); // 右
         // clearInterval(s_ctrlrun3); 
+        document.getElementById("eat_coin").play();
         snake_foodrt();
         snake_runrun();
+        
         // s_ctrlrun3 = setInterval(snake_run_R, s_speed);
     } else if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == -1) {
         snake.unshift(snake[0] + 1); //左
         // clearInterval(s_ctrlrun1) 
+        document.getElementById("eat_coin").play();
         snake_foodrt();
         snake_runrun();
+       
         // s_ctrlrun1 = setInterval(snake_run_L, s_speed);
     } else if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == xx) {
         snake.unshift(snake[0] - xx); //下
         // clearInterval(s_ctrlrun4);
+        document.getElementById("eat_coin").play();
         snake_foodrt();
         snake_runrun();
         // s_ctrlrun4 = setInterval(snake_run_D, s_speed);
+        
     } else if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == (xx*-1)) {
         snake.unshift(snake[0] + xx); //上
         // clearInterval(s_ctrlrun2);
+        document.getElementById("eat_coin").play();
         snake_foodrt();
         snake_runrun();
         // s_ctrlrun2 = setInterval(snake_run_T, s_speed);
+        
     }
 }
 
