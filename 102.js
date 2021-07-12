@@ -13,13 +13,17 @@ for (let i = 2; i < (xx * xx)+1 ; i++) {
     }
 }
 td_all = "<tr>" + td_all
-console.log(td_all);
+// console.log(td_all);
 
 
 // console.log(td_all)
 // 建立整個地圖
 var table_all = document.getElementById("table_all");
 table_all.innerHTML = td_all;
+var coin_n = document.getElementById("coin_n");
+coin_n.innerHTML = "分數: <span id='coin_np'> </span>"
+var coin_np = document.getElementById("coin_np");
+var coin_sum = 0;
 
 // 初始蛇
 var snake_xx = Math.floor(xx/5)+1
@@ -46,12 +50,16 @@ function snake_del() {
         snake.push(snake[snake.length - 1]+1);
     }
 }
+
 // 重製蛇
 function snake_return() {
     alert('撞到了')
+    coin_n.innerHTML = `分數: <span id='coin_np'> 0 </span><br>上次分數: <span>${coin_sum}</span>`
+    coin_np = document.getElementById("coin_np");
+    coin_sum = 0;
     snake_del();
     snake_init();
-    s_speed = 230;
+    s_speed = 200;
     s_ctrl1 = 1;
     s_ctrl2 = 1;
     s_ctrl3 = 1;
@@ -130,7 +138,7 @@ var s_ctrlrun2;
 var s_ctrlrun3;
 var s_ctrlrun4;
 
-var s_speed = 230;
+var s_speed = 200;
 
 function movesanke(e) {
     if (e.keyCode == 37 && s_ctrl1 == 1) {
@@ -182,15 +190,17 @@ function movesanke(e) {
 }
 
 // 亂數的食物
-var snake_food = Math.ceil(Math.random() * (xx*xx));
+var snake_food = Math.ceil(Math.random() * ((xx*xx)-(xx*2)))+xx;
+
 function snake_foodrt() {
     // .includes() 判定指定物件有沒有在陣列裡面。
     while (snake.includes(snake_food) != false) {
-        snake_food = Math.ceil(Math.random() * (xx*xx));
+        snake_food = Math.ceil(Math.random() * ((xx*xx)-(xx*2)))+xx;
     }
     document.getElementById(`td_${snake_food}`).style.backgroundColor = "blue";
     // console.log(snake_food)
 }
+console.log(snake_food);
 snake_foodrt();
 
 
@@ -214,14 +224,17 @@ snake_foodrt();
 function snake_eat() {
     if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == 1) {
         snake.unshift(snake[0] - 1); // 右
+        coin_sum += 20;
+        coin_np.innerHTML = coin_sum;
         // clearInterval(s_ctrlrun3); 
         document.getElementById("eat_coin").play();
         snake_foodrt();
         snake_runrun();
-        
         // s_ctrlrun3 = setInterval(snake_run_R, s_speed);
     } else if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == -1) {
         snake.unshift(snake[0] + 1); //左
+        coin_sum += 20;
+        coin_np.innerHTML = coin_sum;
         // clearInterval(s_ctrlrun1) 
         document.getElementById("eat_coin").play();
         snake_foodrt();
@@ -230,6 +243,8 @@ function snake_eat() {
         // s_ctrlrun1 = setInterval(snake_run_L, s_speed);
     } else if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == xx) {
         snake.unshift(snake[0] - xx); //下
+        coin_sum += 20;
+        coin_np.innerHTML = coin_sum;
         // clearInterval(s_ctrlrun4);
         document.getElementById("eat_coin").play();
         snake_foodrt();
@@ -238,6 +253,8 @@ function snake_eat() {
         
     } else if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == (xx*-1)) {
         snake.unshift(snake[0] + xx); //上
+        coin_sum += 20;
+        coin_np.innerHTML = coin_sum;
         // clearInterval(s_ctrlrun2);
         document.getElementById("eat_coin").play();
         snake_foodrt();
@@ -287,25 +304,45 @@ function snake_hitsalf() {
 function snake_runrun() {
     switch (snake.length) {
         case 4:
-            s_speed = 200;
-            break
-        case 8:
             s_speed = 180;
             break
-        case 12:
+        case 8:
             s_speed = 160;
             break
+        case 12:
+            s_speed = 142;
+            break
         case 16:
-            s_speed = 130;
+            s_speed = 127;
             break
         case 20:
-            s_speed = 100;
+            s_speed = 113;
             break
         case 24:
-            s_speed = 80;
+            s_speed = 100;
             break
         case 28:
-            s_speed = 60;
+            s_speed = 89;
+            break
+        case 32:
+            s_speed = 79;
+            break
+        case 36:
+            s_speed = 70;
+            break
+        case 40:
+            s_speed = 62.5;
+            break
+        case 44:
+            s_speed = 56;
+            break
+        case 48:
+            s_speed = 50;
+            break
+        case 52:
+            s_speed = 45;
             break
     }
 }
+
+// s_speed = 30;
