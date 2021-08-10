@@ -1,11 +1,13 @@
-var xx = parseInt(prompt("輸入大小規格:\n5-30\n建議輸入20。"));
+var xx = parseInt(prompt("輸入大小規格:  5-30\n建議輸入20。"));
+while (xx < 5 || xx > 30 || isNaN(xx)) {
+    xx = parseInt(prompt("請輸入範圍\n輸入大小規格:  5-30\n建議輸入20。"));
+}
 
-
-// 地圖建立過程
-var td_all = "<td id='td_1'></td>";
+// 地圖建立過程c
+var td_all = "<td class='td_all' id='td_1'></td>";
 // var tr_all;
-for (let i = 2; i < (xx * xx)+1 ; i++) {
-    td_all += `<td id='td_${i}'></td>`;
+for (let i = 2; i < (xx * xx) + 1; i++) {
+    td_all += `<td class='td_all' id='td_${i}'></td>`;
     if (i == (xx * xx)) {
         td_all += "</tr>"
     } else if ((i % xx) == 0) {
@@ -21,16 +23,30 @@ td_all = "<tr>" + td_all
 var table_all = document.getElementById("table_all");
 table_all.innerHTML = td_all;
 var coin_n = document.getElementById("coin_n");
+var coin_n2 = document.getElementById("coin_n2");
 coin_n.innerHTML = "分數: <span id='coin_np'> </span>"
 var coin_np = document.getElementById("coin_np");
 var coin_sum = 0;
 
+// 計算分數列表
+var coin_sum_all = [0];
+var coin_cnt = 0;
+
+// 排序計分
+function sortNum(a,b) {
+    return a - b; 
+    //升序，如降序，把“a - b”該成“b - a”
+    }
+    // var myarr = new Array("80","16","50","6","100","1");
+    // document.write(myarr + "<br>");
+    // document.write(myarr.sort(sortNum));
+
 // 初始蛇
-var snake_xx = Math.floor(xx/5)+1
+var snake_xx = Math.floor(xx / 5) + 1
 console.log(snake_xx)
 var snake = [1];
 for (let g = 1; g < snake_xx; g++) {
-    snake.push(snake[snake.length - 1]+1);
+    snake.push(snake[snake.length - 1] + 1);
 }
 
 function snake_init() {
@@ -47,16 +63,27 @@ function snake_del() {
     }
     snake = [1];
     for (let g = 1; g < snake_xx; g++) {
-        snake.push(snake[snake.length - 1]+1);
+        snake.push(snake[snake.length - 1] + 1);
     }
 }
 
 // 重製蛇
 function snake_return() {
     alert('撞到了')
-    coin_n.innerHTML = `分數: <span id='coin_np'> 0 </span><br>上次分數: <span>${coin_sum}</span>`
+    // 印出分數
+    // coin_n.innerHTML = `分數: <span id='coin_np'> 0 </span><br>最高分數: <span>${Math.max(...coin_sum_all)}</span>`
+    coin_n2.innerHTML = "排行<br>";
+    // 印出排序
+    coin_sum_all.sort(sortNum);
+    coin_sum_all.reverse();
+    for (let i = 0; i < coin_sum_all.length && i < 5; i++) {
+
+        coin_n2.innerHTML += `第 ${i+1} 名 : ${coin_sum_all[i]}<br>`
+    }
+
     coin_np = document.getElementById("coin_np");
-    coin_sum = 0;
+    coin_sum_all.push(0);
+    coin_cnt += 1;
     snake_del();
     snake_init();
     s_speed = 200;
@@ -68,16 +95,30 @@ function snake_return() {
 
 function snake_run_R() {
     if ((snake[snake.length - 1] % xx == 0)) {
+        // 撞到死掉
         clearInterval(s_ctrlrun3);
         snake_return()
     } else {
-        document.getElementById(`td_${snake[0]}`).style.backgroundColor = "";
+        try {
+            document.getElementById(`td_${snake[0]}`).style.backgroundColor = "";
+        } catch (error) {
+            console.log("尾巴建立錯誤_R1")
+        }
+
         snake.push(snake[snake.length - 1] + 1);
         snake.shift();
-        document.getElementById(`td_${snake[snake.length - 1]}`).style.backgroundColor = "red";
+
+        try {
+            document.getElementById(`td_${snake[snake.length - 1]}`).style.backgroundColor = "red";
+        } catch (error) {
+            console.log("尾巴建立錯誤_R2")
+        }
+
         snake_hitsalf()
         snake_eat()
     }
+
+
 }
 
 function snake_run_L() {
@@ -85,10 +126,21 @@ function snake_run_L() {
         clearInterval(s_ctrlrun1);
         snake_return()
     } else {
-        document.getElementById(`td_${snake[0]}`).style.backgroundColor = "";
+        try {
+            document.getElementById(`td_${snake[0]}`).style.backgroundColor = "";
+        } catch (error) {
+            console.log("尾巴建立錯誤_L1")
+        }
+
         snake.push(snake[snake.length - 1] - 1);
         snake.shift();
-        document.getElementById(`td_${snake[snake.length - 1]}`).style.backgroundColor = "red";
+
+        try {
+            document.getElementById(`td_${snake[snake.length - 1]}`).style.backgroundColor = "red";
+        } catch (error) {
+            console.log("尾巴建立錯誤_L2")
+        }
+
         snake_hitsalf()
         snake_eat()
     }
@@ -101,24 +153,47 @@ function snake_run_T() {
         clearInterval(s_ctrlrun2);
         snake_return()
     } else {
-        document.getElementById(`td_${snake[0]}`).style.backgroundColor = "";
+        try {
+            document.getElementById(`td_${snake[0]}`).style.backgroundColor = "";
+        } catch (error) {
+            console.log("尾巴建立錯誤_T1")
+        }
+
         snake.push(snake[snake.length - 1] - xx);
         snake.shift();
-        document.getElementById(`td_${snake[snake.length - 1]}`).style.backgroundColor = "red";
+
+        try {
+            document.getElementById(`td_${snake[snake.length - 1]}`).style.backgroundColor = "red";
+        } catch (error) {
+            console.log("尾巴建立錯誤_T2")
+        }
+
         snake_hitsalf()
         snake_eat()
     }
 }
 
 function snake_run_D() {
-    if (snake[snake.length - 1] > (((xx*xx)+1)-xx)) {
+    if (snake[snake.length - 1] > (((xx * xx) + 1) - xx)) {
         clearInterval(s_ctrlrun4);
         snake_return()
     } else {
-        document.getElementById(`td_${snake[0]}`).style.backgroundColor = "";
-        snake.push(snake[snake.length - 1] + xx);
+        try {
+            document.getElementById(`td_${snake[0]}`).style.backgroundColor = "";
+        } catch (error) {
+            console.log("尾巴建立錯誤_D1")
+        }
+
+        snake.push(snake[snake.length - 1] + xx); 5
         snake.shift();
-        document.getElementById(`td_${snake[snake.length - 1]}`).style.backgroundColor = "red";
+        // document.getElementById(`td_${snake[snake.length - 1]}`).style.backgroundColor = "red";4
+
+        try {
+            document.getElementById(`td_${snake[snake.length - 1]}`).style.backgroundColor = "red";
+        } catch (error) {
+            console.log("尾巴建立錯誤_D2")
+        }
+
         snake_hitsalf()
         snake_eat()
     }
@@ -190,12 +265,12 @@ function movesanke(e) {
 }
 
 // 亂數的食物
-var snake_food = Math.ceil(Math.random() * ((xx*xx)-(xx*2)))+xx;
+var snake_food = Math.ceil(Math.random() * ((xx * xx) - (xx * 2))) + xx;
 
 function snake_foodrt() {
     // .includes() 判定指定物件有沒有在陣列裡面。
     while (snake.includes(snake_food) != false) {
-        snake_food = Math.ceil(Math.random() * ((xx*xx)-(xx*2)))+xx;
+        snake_food = Math.ceil(Math.random() * ((xx * xx) - (xx * 2))) + xx;
     }
     document.getElementById(`td_${snake_food}`).style.backgroundColor = "blue";
     // console.log(snake_food)
@@ -224,8 +299,8 @@ snake_foodrt();
 function snake_eat() {
     if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == 1) {
         snake.unshift(snake[0] - 1); // 右
-        coin_sum += 20;
-        coin_np.innerHTML = coin_sum;
+        coin_sum_all[coin_cnt] += 20;
+        coin_np.innerHTML = coin_sum_all[coin_cnt];
         // clearInterval(s_ctrlrun3); 
         document.getElementById("eat_coin").play();
         snake_foodrt();
@@ -233,34 +308,34 @@ function snake_eat() {
         // s_ctrlrun3 = setInterval(snake_run_R, s_speed);
     } else if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == -1) {
         snake.unshift(snake[0] + 1); //左
-        coin_sum += 20;
-        coin_np.innerHTML = coin_sum;
+        coin_sum_all[coin_cnt] += 20;
+        coin_np.innerHTML = coin_sum_all[coin_cnt];
         // clearInterval(s_ctrlrun1) 
         document.getElementById("eat_coin").play();
         snake_foodrt();
         snake_runrun();
-       
+
         // s_ctrlrun1 = setInterval(snake_run_L, s_speed);
     } else if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == xx) {
         snake.unshift(snake[0] - xx); //下
-        coin_sum += 20;
-        coin_np.innerHTML = coin_sum;
+        coin_sum_all[coin_cnt] += 20;
+        coin_np.innerHTML = coin_sum_all[coin_cnt];
         // clearInterval(s_ctrlrun4);
         document.getElementById("eat_coin").play();
         snake_foodrt();
         snake_runrun();
         // s_ctrlrun4 = setInterval(snake_run_D, s_speed);
-        
-    } else if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == (xx*-1)) {
+
+    } else if (snake[snake.length - 1] == snake_food && (snake[1] - snake[0]) == (xx * -1)) {
         snake.unshift(snake[0] + xx); //上
-        coin_sum += 20;
-        coin_np.innerHTML = coin_sum;
+        coin_sum_all[coin_cnt] += 20;
+        coin_np.innerHTML = coin_sum_all[coin_cnt];
         // clearInterval(s_ctrlrun2);
         document.getElementById("eat_coin").play();
         snake_foodrt();
         snake_runrun();
         // s_ctrlrun2 = setInterval(snake_run_T, s_speed);
-        
+
     }
 }
 
