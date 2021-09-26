@@ -1,1 +1,3 @@
-# Mysnake.github.io
+# 貪吃蛇
+
+備註: 手機無法遊玩
